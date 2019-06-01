@@ -3,26 +3,26 @@ using System.Runtime.InteropServices;
 
 namespace kOS.FS.Models
 {
-    [StructLayout(LayoutKind.Explicit, Size = 64, CharSet = CharSet.Ansi)]
-    struct IndexNode
+    class IndexNode
     {
-        [FieldOffset(0)] ushort ID;
+        public const int NodeSize = 64;
+        public const int ReservedSize = 16;
+        public const int NameMaxLength = 32;
 
-        [MarshalAs(UnmanagedType.U2)]
-        [FieldOffset(2)] IndexFlags Flags;
+        public ushort ID { get; set; }
 
-        [FieldOffset(4)] ushort ParentID;
+        public IndexFlags Flags { get; set; }
 
-        [FieldOffset(6)] ushort DeviceID;
+        public ushort ParentID { get; set; }
 
-        [FieldOffset(8)] uint Size;
+        public ushort DeviceID { get; set; }
 
-        [FieldOffset(12)] uint DataSector;
+        public uint DataLength { get; set; }
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16, ArraySubType = UnmanagedType.U1)]
-        [FieldOffset(16)] byte[] Reserved;
+        public uint DataSector { get; set; }
 
-        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-        [FieldOffset(32)] string Name;
+        public byte[] Reserved { get; set; }
+
+        public string Name { get; set; }
     }
 }

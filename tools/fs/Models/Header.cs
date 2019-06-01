@@ -4,25 +4,31 @@ using System.Runtime.InteropServices;
 
 namespace kOS.FS.Models
 {
-    [StructLayout(LayoutKind.Explicit, Size = 512, CharSet = CharSet.Ansi)]
-    struct Header
+    class Header
     {
-        public const string MagicIdentifier = "kOS.FS";
+        public const string MagicIdentifier = "kOS.FS\0\0";
+        public const int MagicSize = 8;
+        public const int Size = 512;
+        public const int ReservedSize = 478;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6, ArraySubType = UnmanagedType.U1)]
-        [FieldOffset(0)] byte[] Magic;
+        public byte[] Magic { get; set; }
 
-        [FieldOffset(6)] byte VersionMajor;
+        public byte VersionMajor { get; set; }
 
-        [FieldOffset(7)] byte VersionMinor;
+        public byte VersionMinor { get; set; }
 
-        [FieldOffset(8)] uint Sectors;
+        public uint Sectors { get; set; }
 
-        [FieldOffset(12)] uint IndexNodes;
+        public uint IndexNodes { get; set; }
 
-        [FieldOffset(16)] uint BootLoaderID;
+        public uint IndexSectors => IndexNodes / 8 + (IndexNodes % 8 != 0 ? 1U : 0U);
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 492, ArraySubType = UnmanagedType.U1)]
-        [FieldOffset(20)] byte[] Reserved;
+        public uint BitmapSectors { get; set; }
+
+        public uint BitmapLength { get; set; }
+
+        public uint BootLoaderID { get; set; }
+
+        public byte[] Reserved { get; set; }
     }
 }
