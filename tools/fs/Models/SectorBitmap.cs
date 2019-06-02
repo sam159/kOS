@@ -6,14 +6,16 @@ namespace kOS.FS.Models
     {
         public uint Sectors { get; private set; }
 
-        public uint BitmapSectors => (uint)((Sectors / 512) + (Sectors % 512 != 0 ? 1 : 0));
+        public uint BitmapSize => (uint)((Sectors / 8) + (Sectors % 8 != 0 ? 1 : 0));
+
+        public uint BitmapSectors => (uint)((BitmapSize / 512) + (BitmapSize % 512 != 0 ? 1 : 0));
 
         public byte[] Bitmap { get; private set; }
 
         public SectorBitmap(uint sectors)
         {
             Sectors = sectors;
-            Bitmap = new byte[(Sectors / 8) + (Sectors % 8 != 0 ? 1 : 0)];
+            Bitmap = new byte[BitmapSize];
         }
 
         public bool this[uint sector] {

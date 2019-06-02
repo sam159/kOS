@@ -22,6 +22,15 @@
             "problemMatcher": []
         },
         {
+            "label": "Build Tools/FS",
+            "type": "shell",
+            "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "command": "make bin/fs.dll",
+        },
+        {
             "label": "Run",
             "type": "shell",
             "group": "test",

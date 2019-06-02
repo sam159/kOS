@@ -16,7 +16,7 @@ namespace kOS.FS.IO
             FS = fs;
         }
 
-        private IndexNode GetOrCreateDir(string name, ushort parentId)
+        private IndexNode GetOrCreateDir(string name, uint parentId)
         {
             var node = FS.GetChildren(parentId).FirstOrDefault(x => x.Name == name);
             if (node == null)

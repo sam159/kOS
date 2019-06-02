@@ -6,9 +6,9 @@ namespace kOS.FS.Models
     class DataSector
     {
         public const int NodeSize = 512;
-        public const int ContentSize = 504;
+        public const int ContentSize = NodeSize - sizeof(ushort) - sizeof(uint) - sizeof(uint);
         
-        public ushort ID;
+        public uint ID;
 
         public ushort Length;
 

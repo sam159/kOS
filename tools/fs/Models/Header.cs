@@ -9,7 +9,7 @@ namespace kOS.FS.Models
         public const string MagicIdentifier = "kOS.FS\0\0";
         public const int MagicSize = 8;
         public const int Size = 512;
-        public const int ReservedSize = 478;
+        public const int ReservedSize = Size - MagicSize - (sizeof(byte) * 2) - (sizeof(uint) * 6);
 
         public byte[] Magic { get; set; }
 
@@ -21,7 +21,7 @@ namespace kOS.FS.Models
 
         public uint IndexNodes { get; set; }
 
-        public uint IndexSectors => IndexNodes / 8 + (IndexNodes % 8 != 0 ? 1U : 0U);
+        public uint IndexSectors => (IndexNodes * IndexNode.NodeSize) / 512;
 
         public uint BitmapSectors { get; set; }
 

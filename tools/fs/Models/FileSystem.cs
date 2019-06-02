@@ -24,23 +24,31 @@ namespace kOS.FS.Models
 
         public FileSystem(uint sectors, uint indexNodes)
         {
+            //Ensure index nodes use whole sectors
+            indexNodes += 8 - indexNodes % 8;
+
             Header = new Header()
             {
                 Sectors = sectors,
                 IndexNodes = indexNodes,
                 VersionMajor = 1,
-                VersionMinor = 1,
+                VersionMinor = 0
             };
+            IndexNodes = new IndexNode[indexNodes];
 
-            Bitmap = new SectorBitmap(sectors);
+            var dataSectors = Header.Sectors - Header.IndexSectors - 1;
+            var bitmapSectors = 0U;
+            while (bitmapSectors * (512 * 8) < dataSectors)
+            {
+                bitmapSectors++;
+                dataSectors--;
+            }
+
+            Bitmap = new SectorBitmap(dataSectors);
             Header.BitmapLength = (uint)Bitmap.Bitmap.LongLength;
             Header.BitmapSectors = Bitmap.BitmapSectors;
 
-            IndexNodes = new IndexNode[indexNodes];
-
-            var dataCount = Header.Sectors - Header.IndexSectors - Header.BitmapSectors - 1;
-            DataSectors = new DataSector[dataCount];
-
+            DataSectors = new DataSector[dataSectors];
         }
 
         public void UpdateBitmap()
@@ -61,10 +69,9 @@ namespace kOS.FS.Models
             }
 
             //update data sectors
-            sector = 1 + Header.BitmapSectors + Header.IndexSectors;
-            for (long i = 0; i < DataSectors.LongLength; i++)
+            for (uint i = 0; i < DataSectors.LongLength; i++)
             {
-                Bitmap[sector++] = DataSectors[i] != null;
+                Bitmap[i] = DataSectors[i] != null;
             }
         }
 
@@ -75,7 +82,7 @@ namespace kOS.FS.Models
             );
         }
 
-        public IEnumerable<IndexNode> GetChildren(ushort parentId)
+        public IEnumerable<IndexNode> GetChildren(uint parentId)
         {
             return from n in IndexNodes
                    where n != null && n.ParentID == parentId && n.Flags.HasFlag(IndexFlags.Valid)
@@ -88,15 +95,18 @@ namespace kOS.FS.Models
                 IndexNodes,
                 x => x == null || !x.Flags.HasFlag(IndexFlags.Valid)
             );
-            if (index == -1) {
+            if (index == -1)
+            {
                 throw new InvalidOperationException("Exausted index nodes");
             }
             IndexNodes[index] = node;
         }
 
-        public uint InsertDataSector(DataSector data) {
+        public uint InsertDataSector(DataSector data)
+        {
             var index = Array.FindIndex(DataSectors, x => x == null);
-            if (index == -1) {
+            if (index == -1)
+            {
                 throw new InvalidOperationException("Exausted data capacity");
             }
             DataSectors[index] = data;

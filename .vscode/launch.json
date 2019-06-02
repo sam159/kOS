@@ -9,10 +9,10 @@
             "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Build",
+            "preLaunchTask": "Build Tools/FS",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/tools/fs/bin/Debug/netcoreapp2.2/fs.dll",
-            "args": [],
+            "args": ["${workspaceFolder}/bin/disk.part", "32768", "10", "${workspaceFolder}/rootfs"],
             "cwd": "${workspaceFolder}/tools/fs",
             // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
             "console": "internalConsole",

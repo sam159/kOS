@@ -16,31 +16,20 @@ namespace kOS.FS.IO
         {
             fs.UpdateBitmap();
             WriteHeader(fs.Header);
-            WriteBitmap(fs.Bitmap);
             var emptyIndex = new IndexNode();
-            for (long i = 0; i < fs.Header.IndexNodes; i++)
+            for (long i = 0; i < fs.IndexNodes.LongLength; i++)
             {
-                if (i < fs.IndexNodes.LongLength)
-                {
-                    WriteIndex(fs.IndexNodes[i] ?? emptyIndex);
-                }
-                else
-                {
-                    WriteIndex(emptyIndex);
-                }
+                WriteIndex(fs.IndexNodes[i] ?? emptyIndex);
             }
+            WriteBitmap(fs.Bitmap);
             var emptyData = new DataSector();
-            var dataCount = fs.Header.Sectors - fs.Header.IndexNodes - fs.Header.BitmapSectors - 1;
-            for (long i = 0; i < dataCount; i++)
+            for (long i = 0; i < fs.DataSectors.LongLength; i++)
             {
-                if (i < fs.DataSectors.LongLength)
+                WriteData(fs.DataSectors[i] ?? new DataSector
                 {
-                    WriteData(fs.DataSectors[i] ?? emptyData);
-                }
-                else
-                {
-                    WriteData(emptyData);
-                }
+                    ID = (uint)i,
+                    Length = 0
+                });
             }
         }
 
