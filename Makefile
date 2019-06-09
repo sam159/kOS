@@ -1,11 +1,10 @@
 .DEFAULT_GOAL := build
-DISK_SIZE=16
-DISK_SECTORS=32768
+DISK_SECTORS=2879
 DISK_INDEX_PC=10
 ROOTFS_FILES := $(shell find rootfs/ -type f)
 TOOLS_FS_FILES := $(shell find tools/fs -type f -name "*.cs")
 
-boot/boot:
+boot/boot: boot/*.asm
 	$(MAKE) -C boot
 
 bin/disk.raw: boot/boot bin/disk.part
@@ -29,5 +28,6 @@ run: build
 
 .PHONY: clean
 clean:
-	-rm bin/*
+	rm bin/*
+	dotnet clean tools/fs/fs.csproj
 	$(MAKE) -C boot clean

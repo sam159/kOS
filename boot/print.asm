@@ -27,21 +27,11 @@ printnl:
 printhex:
     pusha
     xor cx,cx               ; Clear counter
-    mov ah, 0x0e            ; TTY
 printhex_loop:
     cmp cx, dx              ; return when counter = DX
     je printhex_ret
-    mov bx, [si]            ; Get char at si
-    and bx, 0x00F0          ; Output the first half of the byte
-    shr bx, 4
-    add bx, hexmap          ; Add the start address of the lookup table
-    mov al, byte [bx]       ; Get the char in the lookup table
-    int 0x10                ; Print hex char
-    mov bx, [si]            ; Do same for second hex char of byte
-    and bx, 0x000F
-    add bx, hexmap
-    mov al, byte [bx]
-    int 0x10
+    mov dx, [si]            ; Get char at si
+    call printbyte
     inc si                  ; Increment data and counter
     inc cx
     jmp printhex_loop
@@ -49,4 +39,40 @@ printhex_ret:
     popa
     ret
 
-hexmap db 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x41, 0x42, 0x43, 0x44, 0x45, 0x46
+; DX = data
+printword:
+    push dx
+    ror dx, 8
+    call printbyte
+    ror dx, 8
+    call printbyte
+    pop dx
+    ret
+
+; DL = byte
+printbyte:
+    push bx
+    push ax
+    mov ah, 0x0e            ; TTY
+    mov bx, dx
+    and bx, 0x00F0
+    shr bx, 4
+    call printnibble
+    mov bx, dx
+    and bx, 0x000F
+    call printnibble
+    pop ax
+    pop bx
+    ret
+
+printnibble:
+    cmp bl, 0x09
+    ja printnibble_GT9
+    add bl, 0x30
+    jmp printnibble_out
+printnibble_GT9:
+    add bl, 0x37
+printnibble_out:
+    mov al, bl
+    int 0x10
+    ret
