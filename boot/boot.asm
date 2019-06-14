@@ -14,12 +14,30 @@ Main:
     mov dl, [diskid]
     int 0x13
     jc readerr
+    
+    mov [heads], dh
 
-    push dx
-    mov dx, cx
+    mov al, ch
+    mov ah, cl
+    and ah, 0xC0
+    shr ah, 6
+    mov [cyls], ax
+
+    mov al, cl
+    and al, 0x3F
+    mov [sectors], al
+
+    mov dx, [cyls]
     call printword
     call printnl
-    pop dx
+
+    mov dx, 0
+    mov dl, [sectors]
+    call printword
+    call printnl
+
+    mov dx, 0
+    mov dl, [heads]
     call printword
     call printnl
 
@@ -27,10 +45,9 @@ Main:
 readerr:
     mov si, str_readerr
     call printstr
-    mov [temp], ah
-    mov si, temp
-    mov dx, 1
-    call printhex
+    mov dx, 0
+    mov dl, ah
+    call printbyte
     call printnl
 
 loopy:
@@ -39,11 +56,13 @@ loopy:
 
 ;global variables
 diskid db 0x00
-temp db 0x00
+cyls dw 0x0000
+sectors db 0x00
+heads db 0x00
 
 ;strings
 str_banner db 13, 10, 'kOS Booting', 13, 10, 0x00
-str_readerr db 'Read Failed ', 0x00
+str_readerr db 'Read Failed: ', 0x00
 
 
 ; padding and magic number

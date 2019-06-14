@@ -24,7 +24,7 @@ build: bin/disk.raw bin/fs.dll
 
 .PHONY: run
 run: build
-	qemu-system-i386 --cpu pentium -m 64 -drive file=bin/disk.raw,if=ide,media=disk,format=raw
+	qemu-system-i386 --cpu pentium -m 64 -drive file=bin/disk.raw,if=floppy,media=disk,format=raw
 
 .PHONY: clean
 clean:
