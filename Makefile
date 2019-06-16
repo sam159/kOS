@@ -3,7 +3,7 @@ DISK_SECTORS=2879
 DISK_INDEX_PC=10
 ROOTFS_FILES := $(shell find rootfs/ -type f)
 TOOLS_FS_FILES := $(shell find tools/fs -type f -name "*.cs")
-
+ 
 boot/boot: boot/*.asm
 	$(MAKE) -C boot
 
@@ -24,7 +24,7 @@ build: bin/disk.raw bin/fs.dll
 
 .PHONY: run
 run: build
-	qemu-system-i386 --cpu pentium -m 64 -drive file=bin/disk.raw,if=floppy,media=disk,format=raw
+	qemu-system-i386 --cpu pentium -m 64 -drive file=bin/disk.raw,if=floppy,media=disk,format=raw -boot a
 
 .PHONY: clean
 clean:

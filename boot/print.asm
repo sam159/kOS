@@ -23,18 +23,24 @@ printnl:
     ret
 
 ; SI = start of data
-; DX = length
+; CX = length
 printhex:
     pusha
-    xor cx,cx               ; Clear counter
+    mov bx, 24
 printhex_loop:
-    cmp cx, dx              ; return when counter = DX
-    je printhex_ret
-    mov dx, [si]            ; Get char at si
+    test cx, cx              ; return when cx = 0
+    jz printhex_ret
+    mov dl, byte [si]        ; Get byte at si
     call printbyte
-    inc si                  ; Increment data and counter
-    inc cx
-    jmp printhex_loop
+    inc si                   ; Increment data and counter
+    dec cx
+    dec bx
+    jz printhex_nl
+    jmp short printhex_loop
+printhex_nl:
+    mov bx, 24
+    call printnl
+    jmp short printhex_loop
 printhex_ret:
     popa
     ret
