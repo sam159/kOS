@@ -5,6 +5,7 @@ jmp Main
 
 %include "print.asm"
 %include "disk.asm"
+%include "fs.asm"
 
 Main:
     mov si, str_banner
@@ -30,6 +31,7 @@ Main:
 
 loopy:
     jmp $
+    dw 0x2143 ;end marker
 
 
 ;global variables

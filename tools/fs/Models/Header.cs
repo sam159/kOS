@@ -6,8 +6,8 @@ namespace kOS.FS.Models
 {
     class Header
     {
-        public const string MagicIdentifier = "kOS.FS\0\0";
-        public const int MagicSize = 8;
+        public const string MagicIdentifier = "kOS.FS";
+        public const int MagicSize = 6;
         public const int Size = 512;
         public const int ReservedSize = Size - MagicSize - (sizeof(byte) * 2) - (sizeof(uint) * 6);
 

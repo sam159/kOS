@@ -25,11 +25,7 @@ namespace kOS.FS.IO
             var emptyData = new DataSector();
             for (long i = 0; i < fs.DataSectors.LongLength; i++)
             {
-                WriteData(fs.DataSectors[i] ?? new DataSector
-                {
-                    ID = (uint)i,
-                    Length = 0
-                });
+                WriteData(fs.DataSectors[i]);
             }
         }
 
@@ -79,6 +75,7 @@ namespace kOS.FS.IO
             Write(node.DeviceID);
             Write(node.DataLength);
             Write(node.DataSector);
+            Write(node.DataSectorCount);
             if (node.Reserved == null || node.Reserved.Length != IndexNode.ReservedSize)
             {
                 Write(new byte[IndexNode.ReservedSize]);
@@ -98,10 +95,7 @@ namespace kOS.FS.IO
 
         private void WriteData(DataSector data)
         {
-            Write(data.ID);
-            Write(data.Length);
-            Write(data.NextSector);
-            if (data.Content == null || data.Content.Length != DataSector.ContentSize)
+            if (data?.Content == null || data.Content.Length != DataSector.ContentSize)
             {
                 Write(new byte[DataSector.ContentSize]);
             }

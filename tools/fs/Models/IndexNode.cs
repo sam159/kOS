@@ -7,7 +7,7 @@ namespace kOS.FS.Models
     {
         public const int NodeSize = 64;
         public const int NameMaxLength = 32;
-        public const int ReservedSize = NodeSize - NameMaxLength - (sizeof(ushort) * 2) - (sizeof(uint) * 4);
+        public const int ReservedSize = NodeSize - NameMaxLength - (sizeof(ushort) * 2) - (sizeof(uint) * 5);
 
         public uint ID { get; set; }
 
@@ -20,6 +20,8 @@ namespace kOS.FS.Models
         public uint DataLength { get; set; }
 
         public uint DataSector { get; set; }
+
+        public uint DataSectorCount { get; set; }
 
         public byte[] Reserved { get; set; }
 

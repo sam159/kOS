@@ -57,7 +57,9 @@ disk_read_retry:
     mov ah, 0x02 ; Read function
     mov al, 0x01 ; Read 1 sector
 
+    push es     ; Preserve es for crappy bioses
     int 0x13
+    pop es
     jnc disk_read_sector_ok
 
     xor ah, ah

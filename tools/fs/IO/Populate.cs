@@ -55,27 +55,19 @@ namespace kOS.FS.IO
                 {
                     var buffer = new byte[DataSector.ContentSize];
                     var read = 0;
-                    DataSector prevSector = null;
                     while ((read = fileStream.Read(buffer, 0, buffer.Length)) > 0)
                     {
                         var sector = new DataSector
                         {
-                            ID = node.ID,
-                            Length = (ushort)read,
-                            NextSector = 0,
                             Content = new byte[DataSector.ContentSize]
                         };
                         Array.Copy(buffer, sector.Content, read);
                         var sectorId = FS.InsertDataSector(sector);
                         if (!node.Flags.HasFlag(IndexFlags.HasData)) {
-                            node.Flags |= IndexFlags.HasData;
+                            node.Flags |= IndexFlags.HasData | IndexFlags.Contigious;
                             node.DataSector = sectorId;
                         }
-                        if (prevSector != null)
-                        {
-                            prevSector.NextSector = sectorId;
-                        }
-                        prevSector = sector;
+                        node.DataSectorCount ++;
                     }
                 }
             }

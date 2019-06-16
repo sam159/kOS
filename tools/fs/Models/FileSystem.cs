@@ -112,6 +112,21 @@ namespace kOS.FS.Models
             DataSectors[index] = data;
             return (uint)index;
         }
+
+        public IndexNode GetIndexByPath(string filePath)
+        {
+            var path = ("/"+(filePath.TrimStart('/'))).Split('/');
+
+            IndexNode node = null;
+            for(var i=0;i<path.Length;i++) {
+                var parentId = node == null ? 0 : node.ID;
+                node = IndexNodes.FirstOrDefault(x => x != null && x.ParentID == parentId && x.Name == path[i]);
+                if (node == null) {
+                    return null;
+                }
+            }
+            return node;
+        }
     }
 
 }

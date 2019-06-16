@@ -14,7 +14,7 @@ bin/fs.dll: tools/fs/bin/Debug/netcoreapp2.2/fs.dll
 	[[ -f "$@" ]] || ln -s ../tools/fs/bin/Debug/netcoreapp2.2/fs.dll $@
 
 bin/disk.part: bin/fs.dll $(ROOTFS_FILES)
-	dotnet bin/fs.dll $@ $(DISK_SECTORS) $(DISK_INDEX_PC) rootfs/
+	dotnet bin/fs.dll $@ $(DISK_SECTORS) $(DISK_INDEX_PC) rootfs /test1/lorem.txt
 
 tools/fs/bin/Debug/netcoreapp2.2/fs.dll: $(TOOLS_FS_FILES)
 	dotnet build tools/fs/fs.csproj

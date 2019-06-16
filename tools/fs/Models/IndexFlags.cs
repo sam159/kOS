@@ -8,6 +8,7 @@ namespace kOS.FS.Models
         Directory = 1 << 0,
         Valid = 1 << 1,
         Device = 1 << 2,
-        HasData = 1 << 3
+        HasData = 1 << 3,
+        Contigious = 1 << 4
     }
 }
