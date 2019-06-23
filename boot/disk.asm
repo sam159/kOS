@@ -29,7 +29,7 @@ disk_select:
 disk_read:
     pusha
 disk_read_continue:
-    mov di, 1               ; x attempts to read sector
+    mov di, 3               ; x attempts to read sector
 disk_read_retry:
     pusha
 
