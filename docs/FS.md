@@ -26,8 +26,10 @@ Unless stated all numbers are unsigned with little-endian byte order.
 | 16          | 4 bytes   | Index sector count (index count / 8)                 |
 | 20          | 4 bytes   | Bitmap sector count                                  |
 | 24          | 4 bytes   | Size of bitmap in bytes                              |
-| 28          | 4 bytes   | index ID of bootloader file                          |
-| 32          | 408 bytes | Reserved / Zero                                      |
+| 28          | 4 bytes   | Index ID of bootloader file                          |
+| 32          | 4 bytes   | Bootloadaer first data sector                        |
+| 36          | 4 bytes   | Bootloader sector count                              |
+| 40          | 408 bytes | Reserved / Zero                                      |
 
 Number of data sectors can be inferred from sector count - index sectors - bitmap sectors.
 

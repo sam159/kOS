@@ -9,7 +9,7 @@ namespace kOS.FS.Models
         public const string MagicIdentifier = "kOS.FS";
         public const int MagicSize = 6;
         public const int Size = 512;
-        public const int ReservedSize = Size - MagicSize - (sizeof(byte) * 2) - (sizeof(uint) * 6);
+        public const int ReservedSize = Size - MagicSize - (sizeof(byte) * 2) - (sizeof(uint) * 8);
 
         public byte[] Magic { get; set; }
 
@@ -28,6 +28,10 @@ namespace kOS.FS.Models
         public uint BitmapLength { get; set; }
 
         public uint BootLoaderID { get; set; }
+
+        public uint BootLoaderFirstSector { get; set; }
+
+        public uint BootLoaderSectorCount { get; set; }
 
         public byte[] Reserved { get; set; }
     }

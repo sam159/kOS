@@ -1,15 +1,30 @@
+cls:
+    push ax
+    push bx
+    mov ax, 0x0003 ; 80x25 16 color text (CGA,EGA,MCGA,VGA)
+    int 0x10
+
+    mov ax, 0x0600 ; scroll up, clear
+    mov bh, 0x1F   ; color
+    mov dx, 0x1950 ; size
+    int 0x10
+
+    pop ax
+    pop bx
+    ret
+
 ; SI = start of string
 printstr:
-    push ax
+    pusha
     mov ah, 0x0e            ; TTY
 printstr_loop:
-    lodsb                   ; Load string into al and increment si
+    lodsb                   ; Load char into al and increment si
     cmp al, byte 0x00       ; return if char is 0
     je printstr_ret
     int 0x10                ; print char
     jmp printstr_loop
 printstr_ret:
-    pop ax
+    popa
     ret
 
 printnl:

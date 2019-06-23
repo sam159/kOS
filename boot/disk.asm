@@ -7,6 +7,7 @@ disk_select:
     int 0x13
     jc disk_err
 
+    inc dh
     mov [disk_heads], dh
 
     mov al, ch
@@ -16,8 +17,8 @@ disk_select:
     mov [disk_cyls], ax
 
     mov al, cl
-    and al, 0x3F
-    mov [disk_sectors], al
+    and ax, 0x003F
+    mov [disk_sectors], ax
 
     popa
     ret
@@ -28,7 +29,7 @@ disk_select:
 disk_read:
     pusha
 disk_read_continue:
-    mov di, 3               ; 3 attempts to read sector
+    mov di, 1               ; x attempts to read sector
 disk_read_retry:
     pusha
 
@@ -97,5 +98,5 @@ disk_err:
 disk_curid db 0x00
 disk_errcode db 0x00
 disk_cyls dw 0x0000
-disk_sectors db 0x00
-disk_heads db 0x00
+disk_sectors dw 0x0000
+disk_heads dw 0x0000

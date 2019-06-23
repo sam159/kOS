@@ -1,6 +1,6 @@
 [org 0x7c00]
 
-mov [diskid], dl    ; save boot disk id
+mov [boot_diskid], dl    ; save boot disk id
 jmp Main
 
 %include "print.asm"
@@ -8,39 +8,39 @@ jmp Main
 %include "fs.asm"
 
 Main:
+    call cls
     mov si, str_banner
     call printstr
+    call printnl
 
-    mov dl, [diskid]
+    mov dl, [boot_diskid]
     call disk_select
+
+    mov si, str_loading
+    call printstr
 
     mov ax, 0x0050
     mov es, ax
-
-    mov dx, 0
-    mov ax, 1
-    mov cx, 1
     mov bx, 0
-    call disk_read
+    call fs_load_bootloader
 
-    mov si, 0x0500
-    mov cx, 512
-    call printhex
+    mov si, str_ok
+    call printstr
+    call printnl
 
     jmp loopy
 
 loopy:
     jmp $
-    dw 0x2143 ;end marker
 
-
-;global variables
-diskid db 0x00
+boot_diskid db 0x00
 
 ;strings
-str_banner db 13, 10, 'kOS Booting', 13, 10, 0x00
-str_readerr db 'Disk Error: ', 0x00
-
+str_banner db 'kOS', 0x00
+str_loading db 'Reading Bootloader... ', 0x00
+str_ok db 'OK', 0x00
+str_readerr db 'E!DSK', 0x00
+str_fs_sigmismatch db 'E!FSSIG', 0x00
 
 ; padding and magic number
 times 510 - ($-$$) db 0

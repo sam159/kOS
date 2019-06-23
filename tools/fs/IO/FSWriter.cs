@@ -47,6 +47,8 @@ namespace kOS.FS.IO
             Write(header.BitmapSectors);
             Write(header.BitmapLength);
             Write(header.BootLoaderID);
+            Write(header.BootLoaderFirstSector);
+            Write(header.BootLoaderSectorCount);
             if (header.Reserved == null || header.Reserved.Length != Header.ReservedSize)
             {
                 Write(new byte[Header.ReservedSize]);

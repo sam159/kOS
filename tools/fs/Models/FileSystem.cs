@@ -22,19 +22,19 @@ namespace kOS.FS.Models
         {
         }
 
-        public FileSystem(uint sectors, uint indexNodes)
+        public FileSystem(uint sectors, uint minIndexNodes)
         {
             //Ensure index nodes use whole sectors
-            indexNodes += 8 - indexNodes % 8;
+            minIndexNodes += 8 - minIndexNodes % 8;
 
             Header = new Header()
             {
                 Sectors = sectors,
-                IndexNodes = indexNodes,
+                IndexNodes = minIndexNodes,
                 VersionMajor = 1,
                 VersionMinor = 0
             };
-            IndexNodes = new IndexNode[indexNodes];
+            IndexNodes = new IndexNode[minIndexNodes];
 
             var dataSectors = Header.Sectors - Header.IndexSectors - 1;
             var bitmapSectors = 0U;

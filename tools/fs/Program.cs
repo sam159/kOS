@@ -22,6 +22,7 @@ namespace kOS.FS
             var bootloader = args[4];
 
             var fs = new FileSystem(sectors, indexes);
+            indexes = fs.Header.IndexNodes;
 
             Console.WriteLine($"Creating kOS {fs.Header.VersionMajor}.{fs.Header.VersionMinor} filesystem from path {rootFs}");
 
@@ -40,6 +41,8 @@ namespace kOS.FS
                     throw new ArgumentException("Bootloader file not contigious");
                 }
                 fs.Header.BootLoaderID = bootloaderNode.ID;
+                fs.Header.BootLoaderFirstSector = bootloaderNode.DataSector;
+                fs.Header.BootLoaderSectorCount = bootloaderNode.DataSectorCount;
             }
 
             Console.WriteLine($"In use: {fs.IndexNodes.Count(x => x != null)}/{indexes} indexes, {fs.DataSectors.Count(x => x!=null)}/{fs.DataSectors.Length} data sectors");
